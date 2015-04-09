@@ -1,0 +1,5 @@
+.idea/
+caffe.iml
+
+lib/*
+out/*
