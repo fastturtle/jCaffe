@@ -18,5 +18,5 @@ $(JAVA$(PROJECT)_SO): $(JAVA$(PROJECT)_SRC)
 	@ echo
 	mkdir -p out
 	javac -d . src/edu/h2r/JNet.java src/edu/h2r/Disposable.java
-	jar cf lib/caffe_jni.jar edu/* lib/libcaffe.so
+	jar cf lib/caffe_jni.jar edu/
 	rm -r edu
