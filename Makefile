@@ -18,7 +18,7 @@ $(JAVA$(PROJECT)_SO): $(JAVA$(PROJECT)_SRC)
 	$(CXX) -shared -o $@ $(JAVA$(PROJECT)_SRC) $(LINKFLAGS) $(JAVA_FLAGS) -L../build/lib -lcaffe
 	@ echo
 	javac -d . src/edu/h2r/JNet.java src/edu/h2r/Disposable.java
-	jar cf $(JAVA$(PROJECT)_JAR) edu/* lib/libcaffe.so
+	jar cf $(JAVA$(PROJECT)_JAR) edu/* lib/caffe_jni.so
 	rm -r edu
 
 clean:
