@@ -13,5 +13,6 @@ JAVA_FLAGS := -I$(JAVA_JDK)/include -I$(JAVA_JDK)include/linux
 java: $(JAVA$(PROJECT)_SO)
 
 $(JAVA$(PROJECT)_SO): $(JAVA$(PROJECT)_SRC)
+	mkdir -p lib
 	$(CXX) -shared -o $@ $(JAVA$(PROJECT)_SRC) $(LINKFLAGS) $(JAVA_FLAGS) -L../build/lib -lcaffe
 	@ echo
