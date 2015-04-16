@@ -16,3 +16,6 @@ $(JAVA$(PROJECT)_SO): $(JAVA$(PROJECT)_SRC)
 	mkdir -p lib
 	$(CXX) -shared -o $@ $(JAVA$(PROJECT)_SRC) $(LINKFLAGS) $(JAVA_FLAGS) -L../build/lib -lcaffe
 	@ echo
+	mkdir -p out
+	javac -d out src/edu/h2r/JNet.java src/edu/h2r/Disposable.java
+	jar cf lib/caffe_jni.jar out/edu/* lib/libcaffe.so

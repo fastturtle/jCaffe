@@ -97,6 +97,6 @@ public class JNet implements Disposable {
 
 
     static {
-        System.load(System.getProperty("user.dir") + "/lib/lib_caffe.so");
+        System.load(System.getProperty("user.dir") + "/lib/libcaffe.so");
     }
 }
