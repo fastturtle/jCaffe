@@ -99,7 +99,7 @@ public class JNet implements Disposable {
 
 
     static {
-        System.load("~/caffe/java/lib/lib_caffe.so");
+        System.load("~/caffe/java/lib/libcaffe.so");
     }
 
 }
