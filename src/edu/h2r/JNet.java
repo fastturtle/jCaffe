@@ -2,6 +2,8 @@ package edu.h2r;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.io.File;
+import java.net.URISyntaxException;
 
 /**
  * TODO: 1) Add method to query number of nodes in layer
@@ -97,6 +99,7 @@ public class JNet implements Disposable {
 
 
     static {
-        System.load(System.getProperty("user.dir") + "/lib/libcaffe.so");
+        File jar = new File(JNet.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        System.load(jar.getParentFile().toURI().resolve("libcaffe.so").getPath());
     }
 }
