@@ -99,6 +99,6 @@ public class JNet implements Disposable {
 
     static {
         File jar = new File(JNet.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-        System.load(jar.getParentFile().toURI().resolve("libcaffe.so").getPath());
+        System.load(jar.getParentFile().toURI().resolve("caffe_jni.so").getPath());
     }
 }
