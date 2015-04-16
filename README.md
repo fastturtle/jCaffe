@@ -1,7 +1,11 @@
 # Dependencies
 
+1. JNI
+
+For Ubuntu
+
 # Compilation
 
-Run ``make java``.
+``make java``
 
 # Usage
