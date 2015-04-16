@@ -4,7 +4,7 @@ JAVA_JDK := $$(readlink -f /usr/bin/javac | sed "s:bin/javac::")
 
 JAVA$(PROJECT)_SRC := src/jni/*.cpp
 JAVA$(PROJECT)_HXX_SRC := src/jni/*.hpp
-JAVA$(PROJECT)_SO := lib/lib$(PROJECT).so
+JAVA$(PROJECT)_SO := lib/libcaffe_jni.so
 JAVA$(PROJECT)_JAR := lib/caffe_jni.jar
 
 LINKFLAGS := -pthread -fPIC -Wall -I../.build_release/src -I../caffe/src -I../include -I/usr/local/cuda/include
