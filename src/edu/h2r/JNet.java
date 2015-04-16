@@ -3,7 +3,6 @@ package edu.h2r;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.net.URISyntaxException;
 
 /**
  * TODO: 1) Add method to query number of nodes in layer
