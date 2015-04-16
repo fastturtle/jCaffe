@@ -1,7 +1,5 @@
 package edu.h2r;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
@@ -22,20 +20,20 @@ public class JNet implements Disposable {
         this.inputScale = inputScale;
     }
 
-    public float[] forward(BufferedImage image) throws InvalidArgumentException {
+    public float[] forward(BufferedImage image) throws IllegalArgumentException {
         if (image.getWidth() != getInputWidth() || image.getHeight() != getInputHeight())
-            throw new InvalidArgumentException(new String[]{"Image does not have correct dimensions"});
+            throw new IllegalArgumentException("Image does not have correct dimensions");
 
         String[] layerNames = getLayerNames();
         return forwardTo(imageToArray(image), layerNames[layerNames.length - 1]);
     }
 
-    public float[] forwardTo(BufferedImage image, String toLayerName) throws InvalidArgumentException {
+    public float[] forwardTo(BufferedImage image, String toLayerName) throws IllegalArgumentException {
         if (image.getWidth() != getInputWidth() || image.getHeight() != getInputHeight())
-            throw new InvalidArgumentException(new String[]{"Image does not have correct dimensions"});
+            throw new IllegalArgumentException("Image does not have correct dimensions");
 
         if (!hasLayer(toLayerName))
-            throw new InvalidArgumentException(new String[]{"Layer does not exist"});
+            throw new IllegalArgumentException("Layer does not exist");
 
         return forwardTo(imageToArray(image), toLayerName);
     }
@@ -99,7 +97,7 @@ public class JNet implements Disposable {
 
 
     static {
-        System.load("~/caffe/java/lib/lib_caffe.so");
-    }
 
+        System.load(System.getProperty("user.dir") + "/lib/lib_caffe.so");
+    }
 }

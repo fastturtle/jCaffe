@@ -1,7 +1,5 @@
 package edu.h2r;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,7 +9,7 @@ import java.io.IOException;
  * Created by gabe on 2/19/15.
  */
 public class Test {
-    public static void main(String[] args) throws IOException, InvalidArgumentException {
+    public static void main(String[] args) throws IOException, IllegalArgumentException {
         JNet net = new JNet("/home/gabe/deeprl-autoencoder/corridor/deploy.prototxt", "/home/gabe/deeprl-autoencoder/corridor/snapshots/autoencoder_iter_150000.caffemodel", 1.0f / 255.0f );
 
         for (int imgNum = 0; imgNum < 10; imgNum++) {
