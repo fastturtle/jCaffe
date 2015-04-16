@@ -4,15 +4,15 @@ import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.util.List;
 
 /**
  * TODO: 1) Add method to query number of nodes in layer
  * TODO: 2) Add c++ error handling
  * TODO: 3) Optimize image operations
+ * TODO: 4) Have an internal thread create & destroy c++ stuff
  *
  */
-public class JNet implements INative {
+public class JNet implements Disposable {
 
     private final float inputScale;
     private long internalPtr;
@@ -46,10 +46,6 @@ public class JNet implements INative {
 
         float[] pixels = new float[ h * w];
         image.getData().getPixels(0, 0, w, h, pixels);
-//        for (int i = 0; i < pixels.length; i++) {
-//            pixels[i] = (int)pixels[i] & 0xFF;
-////            pixels[i] = (image.getRGB(i % 80, i / 80) & 0xFF);  // TODO: Optimize
-//        }
         return pixels;
     }
 
@@ -103,7 +99,7 @@ public class JNet implements INative {
 
 
     static {
-        System.load("/home/gabe/caffe/java/lib/lib_caffe.so");
+        System.load("~/caffe/java/lib/lib_caffe.so");
     }
 
 }
