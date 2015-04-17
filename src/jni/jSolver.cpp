@@ -5,9 +5,9 @@
 
 using caffe::Solver;
 
+
 JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_createSolver(JNIEnv *env,
                                             jobject obj, jstring solverFile) {
-    FLAGS_minloglevel = 2;
     const char* cSolverFile = env->GetStringUTFChars(solverFile, NULL);
 
     caffe::SolverParameter solver_param;
