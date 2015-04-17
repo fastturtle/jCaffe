@@ -11,7 +11,7 @@ import java.io.*;
  * TODO: 4) Have an internal thread create & destroy c++ stuff
  *
  */
-public class JNet implements Disposable {
+public class jNet implements Disposable {
 
     private float inputScale;
     private long internalPtr;
@@ -22,7 +22,7 @@ public class JNet implements Disposable {
      * @param pretrained_param_file a trained .caffemodel file
      * @param inputScale a float used to multiply inputs and scale them
      */
-    public JNet(String model_file, String pretrained_param_file, float inputScale) {
+    public jNet(String model_file, String pretrained_param_file, float inputScale) {
         internalPtr = createNet(model_file, pretrained_param_file);
         this.inputScale = inputScale;
     }
@@ -30,7 +30,7 @@ public class JNet implements Disposable {
     /** Create and initialize a net from a solver file
      * @param solver_file the solver.prototxt file
      */
-    public JNet(String solver_file) {
+    public jNet(String solver_file) {
         this.internalPtr = createNet(solver_file);
         this.solverFile = solver_file;
         this.inputScale = -1;
@@ -77,6 +77,11 @@ public class JNet implements Disposable {
         if (this.inputScale == -1)
             throw new IllegalArgumentException("Couldn't parse the 'scale' parameter from file " + networkFile +
                     " (parsed from file " + this.solverFile + ")");
+    }
+
+    protected jNet(long internalPtr, float inputScale) {
+        this.internalPtr = internalPtr;
+        this.inputScale = inputScale;
     }
 
     /**
@@ -179,7 +184,7 @@ public class JNet implements Disposable {
 
     /**
      * Instantiates a Caffe neural network from the model_file and sets its weights using the pretrained_param_file.
-     * The {@link edu.h2r.JNet} class is a wrapper around the underlying Caffe neural network, so store a pointer to
+     * The {@link jNet} class is a wrapper around the underlying Caffe neural network, so store a pointer to
      * it in the internalPtr parameter.
      * @param model_file a Caffe model definition file
      * @param pretrained_param_file a .caffemodel file that contains weights for the Caffe model we are using
@@ -189,7 +194,7 @@ public class JNet implements Disposable {
 
     /**
      * Instantiates a Caffe neural network from the solver_file.
-     * The {@link edu.h2r.JNet} class is a wrapper around the underlying Caffe neural network, so store a pointer to
+     * The {@link jNet} class is a wrapper around the underlying Caffe neural network, so store a pointer to
      * it in the internalPtr parameter.
      * @param solver_file a Caffe model definition file
      * @return a pointer to the underlying Caffe neural network
@@ -200,8 +205,6 @@ public class JNet implements Disposable {
      * Deletes the underlying Caffe neural network
      */
     public native void dispose();
-
-    public native void train(String solverFile);
 
     /**
      * A wrapper around the Caffe neural network's forwardTo method.
@@ -241,7 +244,7 @@ public class JNet implements Disposable {
     private native boolean hasLayer(String layerName);
 
     static {
-        File jar = new File(JNet.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jar = new File(jNet.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         System.load(jar.getParentFile().toURI().resolve("libcaffe_jni.so").getPath());
     }
 }

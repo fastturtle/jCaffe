@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class Test {
     public static void main(String[] args) throws IOException, IllegalArgumentException {
-        JNet net = new JNet("/home/gabe/deeprl-autoencoder/corridor/deploy.prototxt", "/home/gabe/deeprl-autoencoder/corridor/snapshots/autoencoder_iter_150000.caffemodel", 1.0f / 255.0f );
+        jNet net = new jNet("/home/gabe/deeprl-autoencoder/corridor/deploy.prototxt", "/home/gabe/deeprl-autoencoder/corridor/snapshots/autoencoder_iter_150000.caffemodel", 1.0f / 255.0f );
 
         for (int imgNum = 0; imgNum < 10; imgNum++) {
             BufferedImage image = ImageIO.read(new File("/home/gabe/deeprl-autoencoder/corridor/images/10states/" + imgNum + ".jpg"));
