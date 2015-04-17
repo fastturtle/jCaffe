@@ -33,6 +33,14 @@ JNIEXPORT void JNICALL Java_edu_h2r_JNet_dispose
 
 /*
  * Class:     edu_h2r_JNet
+ * Method:    train
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_edu_h2r_JNet_train
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     edu_h2r_JNet
  * Method:    forwardTo
  * Signature: ([FLjava/lang/String;)[F
  */

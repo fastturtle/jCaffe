@@ -1,5 +1,5 @@
 #include <string>
-// #include <cmath>
+// #include <glog/logging.h>
 
 #include "util.hpp"
 #include "edu_h2r_JNet.h"
@@ -34,6 +34,18 @@ JNIEXPORT void JNICALL Java_edu_h2r_JNet_dispose(JNIEnv *env, jobject obj) {
     Net<float> *net = getInternalObject<Net<float> >(env, obj);
     setInternalPtr<Net<float> >(env, obj, NULL);
     delete net;    
+}
+
+JNIEXPORT void JNICALL Java_edu_h2r_JNet_train(JNIEnv *env, jobject obj, jstring solverFile) {
+    const char* cSolverFile = env->GetStringUTFChars(solverFile, NULL);
+
+    caffe::SolverParameter solver_param;
+    caffe::ReadProtoFromTextFileOrDie(FLAGS_solver, &solver_param);
+
+    shared_ptr<caffe::Solver<float> > solver(caffe::GetSolver<float>(solver_param));
+    solver->Solve();
+
+    env->ReleaseStringUTFChars(solverFile, cSolverFile);
 }
 
 JNIEXPORT jfloatArray JNICALL Java_edu_h2r_JNet_forwardTo(JNIEnv *env, jobject obj,
