@@ -12,8 +12,16 @@ extern "C" {
  * Method:    createNet
  * Signature: (Ljava/lang/String;Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet
+JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet__Ljava_lang_String_2Ljava_lang_String_2
   (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     edu_h2r_JNet
+ * Method:    createNet
+ * Signature: (Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     edu_h2r_JNet

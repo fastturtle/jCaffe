@@ -2,7 +2,7 @@ package edu.h2r;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
+import java.io.*;
 
 /**
  * TODO: 1) Add method to query number of nodes in layer
@@ -13,8 +13,9 @@ import java.io.File;
  */
 public class JNet implements Disposable {
 
-    private final float inputScale;
+    private float inputScale;
     private long internalPtr;
+    private String solverFile;
 
     /**
      * @param model_file the simplified model file (aka the deploy file)
@@ -24,6 +25,58 @@ public class JNet implements Disposable {
     public JNet(String model_file, String pretrained_param_file, float inputScale) {
         internalPtr = createNet(model_file, pretrained_param_file);
         this.inputScale = inputScale;
+    }
+
+    /** Create and initialize a net from a solver file
+     * @param solver_file the solver.prototxt file
+     */
+    public JNet(String solver_file) {
+        this.internalPtr = createNet(solver_file);
+        this.solverFile = solver_file;
+        this.inputScale = -1;
+
+        // Parse the network definition file name from the solver file
+        String basePath = solver_file.split("/(?=[^/]+$)")[0];
+        String networkFile = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(solver_file)));
+            String line;
+            while((line = br.readLine()) != null)
+                if(line.trim().startsWith("net:")){
+                    String tmp = line.trim().substring(line.trim().indexOf("net:") + 4).trim();
+                    networkFile = tmp.substring(1, tmp.length() - 1);
+                    if(!networkFile.startsWith("/"))
+                        networkFile = basePath + "/" + networkFile;
+                    break;
+                }
+            br.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Parse the input scale from the network definition file
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(networkFile)));
+            String line;
+            while((line = br.readLine()) != null)
+                if(line.trim().startsWith("scale:")){
+                    String tmp = line.trim().substring(line.trim().indexOf("scale:") + 6).trim();
+                    this.inputScale = Float.valueOf(tmp);
+                    break;
+                }
+            br.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (this.inputScale == -1)
+            throw new IllegalArgumentException("Couldn't parse the 'scale' parameter from file " + networkFile +
+                    " (parsed from file " + this.solverFile + ")");
     }
 
     /**
@@ -132,7 +185,16 @@ public class JNet implements Disposable {
      * @param pretrained_param_file a .caffemodel file that contains weights for the Caffe model we are using
      * @return a pointer to the underlying Caffe neural network
      */
-    public native long createNet(String model_file, String pretrained_param_file);
+    private native long createNet(String model_file, String pretrained_param_file);
+
+    /**
+     * Instantiates a Caffe neural network from the solver_file.
+     * The {@link edu.h2r.JNet} class is a wrapper around the underlying Caffe neural network, so store a pointer to
+     * it in the internalPtr parameter.
+     * @param solver_file a Caffe model definition file
+     * @return a pointer to the underlying Caffe neural network
+     */
+    private native long createNet(String solver_file);
 
     /**
      * Deletes the underlying Caffe neural network

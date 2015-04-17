@@ -12,7 +12,7 @@ using std::vector;
 using std::cout;
 using boost::shared_ptr;
 
-JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet(JNIEnv *env, jobject obj, jstring param_file, jstring pretrained_param_file) {
+JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet__Ljava_lang_String_2Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring param_file, jstring pretrained_param_file) {
     
     FLAGS_minloglevel = 2;
     const char* c_param_file = env->GetStringUTFChars(param_file, NULL);
