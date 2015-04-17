@@ -95,4 +95,9 @@ public class jSolver {
     private native long getNetPointer();
 
     private native long createSolver(String solverFile);
+
+    static {
+        File jar = new File(jNet.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        System.load(jar.getParentFile().toURI().resolve("libcaffe_jni.so").getPath());
+    }
 }
