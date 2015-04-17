@@ -15,7 +15,7 @@ public class jSolver {
         // Parse the network definition file name from the solver file
         String basePath = solverFile.split("/(?=[^/]+$)")[0];
         String networkFile = null;
-        Float inputScale = -1f;
+        float inputScale = -1f;
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(solverFile)));

@@ -11,7 +11,7 @@ using std::vector;
 using std::cout;
 using boost::shared_ptr;
 
-JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet__Ljava_lang_String_2Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring param_file, jstring pretrained_param_file) {
+JNIEXPORT jlong JNICALL Java_edu_h2r_jNet_createNet__Ljava_lang_String_2Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring param_file, jstring pretrained_param_file) {
     
     FLAGS_minloglevel = 2;
     const char* c_param_file = env->GetStringUTFChars(param_file, NULL);
@@ -28,37 +28,14 @@ JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet__Ljava_lang_String_2Ljava_la
     return (jlong) net;
 }
 
-JNIEXPORT void JNICALL Java_edu_h2r_JNet_dispose(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_edu_h2r_jNet_dispose(JNIEnv *env, jobject obj) {
 
     Net<float> *net = getInternalObject<Net<float> >(env, obj);
     setInternalPtr<Net<float> >(env, obj, NULL);
     delete net;    
 }
 
-JNIEXPORT void JNICALL Java_edu_h2r_JNet_train(JNIEnv *env, jobject obj, jstring solverFile) {
-    const char* cSolverFile = env->GetStringUTFChars(solverFile, NULL);
-
-    caffe::SolverParameter solver_param;
-    caffe::ReadProtoFromTextFileOrDie(cSolverFile, &solver_param);
-
-    int gpu = -1;
-    if (solver_param.solver_mode() == caffe::SolverParameter_SolverMode_GPU)
-        gpu = solver_param.device_id();
-    
-    if (gpu >= 0) {
-        caffe::Caffe::SetDevice(gpu);
-        caffe::Caffe::set_mode(caffe::Caffe::GPU);
-    } else {
-        caffe::Caffe::set_mode(caffe::Caffe::CPU);
-    }
-
-    shared_ptr<caffe::Solver<float> > solver(caffe::GetSolver<float>(solver_param));
-    solver->Solve();
-
-    env->ReleaseStringUTFChars(solverFile, cSolverFile);
-}
-
-JNIEXPORT jfloatArray JNICALL Java_edu_h2r_JNet_forwardTo(JNIEnv *env, jobject obj,
+JNIEXPORT jfloatArray JNICALL Java_edu_h2r_jNet_forwardTo(JNIEnv *env, jobject obj,
                                         jfloatArray input, jstring to_layer_name) {
     float *c_input = env->GetFloatArrayElements(input, NULL);
     const char* c_to_layer_name = env->GetStringUTFChars(to_layer_name, NULL);
@@ -106,7 +83,7 @@ JNIEXPORT jfloatArray JNICALL Java_edu_h2r_JNet_forwardTo(JNIEnv *env, jobject o
     return out;
 }
 
-JNIEXPORT jboolean JNICALL Java_edu_h2r_JNet_hasLayer(JNIEnv *env, jobject obj,
+JNIEXPORT jboolean JNICALL Java_edu_h2r_jNet_hasLayer(JNIEnv *env, jobject obj,
                                                         jstring layer_name) {
     const char* c_layer_name = env->GetStringUTFChars(layer_name, NULL);
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
@@ -117,7 +94,7 @@ JNIEXPORT jboolean JNICALL Java_edu_h2r_JNet_hasLayer(JNIEnv *env, jobject obj,
     return ret;
 }
 
-JNIEXPORT jint JNICALL Java_edu_h2r_JNet_getNodeCount(JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getNodeCount(JNIEnv *env, jobject obj,
                                                         jstring blob_name) {
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
     const char* c_blob_name = env->GetStringUTFChars(blob_name, NULL);
@@ -129,7 +106,7 @@ JNIEXPORT jint JNICALL Java_edu_h2r_JNet_getNodeCount(JNIEnv *env, jobject obj,
     return blob->count();
 }
 
-JNIEXPORT jobjectArray JNICALL Java_edu_h2r_JNet_getLayerNames(JNIEnv *env, jobject obj) {
+JNIEXPORT jobjectArray JNICALL Java_edu_h2r_jNet_getLayerNames(JNIEnv *env, jobject obj) {
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
 
     std::vector<string> layer_names = net->layer_names();
@@ -144,32 +121,32 @@ JNIEXPORT jobjectArray JNICALL Java_edu_h2r_JNet_getLayerNames(JNIEnv *env, jobj
     return java_layer_names;
 }
 
-JNIEXPORT jint JNICALL Java_edu_h2r_JNet_getInputHeight(JNIEnv *env, jobject obj) {
+JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getInputHeight(JNIEnv *env, jobject obj) {
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
     return net->input_blobs()[0]->height();
 }
 
-JNIEXPORT jint JNICALL Java_edu_h2r_JNet_getInputWidth(JNIEnv *env, jobject obj) {
+JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getInputWidth(JNIEnv *env, jobject obj) {
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
     return net->input_blobs()[0]->width();
 }
 
-JNIEXPORT jint JNICALL Java_edu_h2r_JNet_getBlobNumber(JNIEnv *env, jobject obj,
-                                                        jstring blob_name) {
-    Net<float> *net = getInternalObject<Net<float> >(env, obj);
+// JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getBlobNumber(JNIEnv *env, jobject obj,
+//                                                         jstring blob_name) {
+//     Net<float> *net = getInternalObject<Net<float> >(env, obj);
 
-    const char* c_blob_name = env->GetStringUTFChars(blob_name, NULL);
-    const string s = string(c_blob_name);
+//     const char* c_blob_name = env->GetStringUTFChars(blob_name, NULL);
+//     const string s = string(c_blob_name);
 
 
-    vector<string> blob_names = net->layer_names();
-    for (unsigned int i = 0; i < blob_names.size(); i++) {
-        if (s.compare(blob_names[i]) == 0) {
-            return i;
-        }
-    }
+//     vector<string> blob_names = net->layer_names();
+//     for (unsigned int i = 0; i < blob_names.size(); i++) {
+//         if (s.compare(blob_names[i]) == 0) {
+//             return i;
+//         }
+//     }
 
-    delete c_blob_name;
+//     delete c_blob_name;
 
-    return -1;
-}
+//     return -1;
+// }
