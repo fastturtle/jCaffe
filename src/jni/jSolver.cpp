@@ -29,12 +29,12 @@ JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_createSolver(JNIEnv *env,
 
     env->ReleaseStringUTFChars(solverFile, cSolverFile);
 
-    return (jlong) solver;
+    return reinterpret_cast<jlong>(solver);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_getNetPointer(JNIEnv *env, jobject obj) {
     Solver<float> *solver = getInternalObject<Solver<float> >(env, obj);
-    return (jlong)solver->net();
+    return reinterpret_cast<jlong>(solver->net().get());
 }
 
 JNIEXPORT void JNICALL Java_edu_h2r_jSolver_train(JNIEnv *env, jobject obj) {
