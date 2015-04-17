@@ -1,5 +1,4 @@
 #include <string>
-// #include <glog/logging.h>
 
 #include "util.hpp"
 #include "edu_h2r_jNet.h"
@@ -25,7 +24,7 @@ JNIEXPORT jlong JNICALL Java_edu_h2r_jNet_createNet__Ljava_lang_String_2Ljava_la
     env->ReleaseStringUTFChars(param_file, c_param_file);
     env->ReleaseStringUTFChars(pretrained_param_file, c_pretrained_param_file);
 
-    return (jlong) net;
+    return reinterpret_cast<jlong>(net);
 }
 
 JNIEXPORT void JNICALL Java_edu_h2r_jNet_dispose(JNIEnv *env, jobject obj) {
@@ -103,7 +102,7 @@ JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getNodeCount(JNIEnv *env, jobject obj,
 
     env->ReleaseStringUTFChars(blob_name, c_blob_name);
 
-    return blob->count();
+    return reinterpret_cast<jint>(blob->count());
 }
 
 JNIEXPORT jobjectArray JNICALL Java_edu_h2r_jNet_getLayerNames(JNIEnv *env, jobject obj) {
@@ -123,12 +122,12 @@ JNIEXPORT jobjectArray JNICALL Java_edu_h2r_jNet_getLayerNames(JNIEnv *env, jobj
 
 JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getInputHeight(JNIEnv *env, jobject obj) {
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
-    return net->input_blobs()[0]->height();
+    return reinterpret_cast<jint>(net->input_blobs()[0]->height());
 }
 
 JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getInputWidth(JNIEnv *env, jobject obj) {
     Net<float>* net = getInternalObject<Net<float> >(env, obj);
-    return net->input_blobs()[0]->width();
+    return reinterpret_cast<jint>(net->input_blobs()[0]->width());
 }
 
 // JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getBlobNumber(JNIEnv *env, jobject obj,
