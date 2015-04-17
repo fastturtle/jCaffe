@@ -7,7 +7,8 @@ JAVA$(PROJECT)_HXX_SRC := src/jni/*.hpp
 JAVA$(PROJECT)_SO := lib/libcaffe_jni.so
 JAVA$(PROJECT)_JAR := lib/caffe_jni.jar
 
-LINKFLAGS := -pthread -fPIC -Wall -I../.build_release/src -I../caffe/src -I../include -I/usr/local/cuda/include
+LINKFLAGS := -pthread -fPIC -Wall -I../.build_release/src -I../caffe/src \
+				-I../include -I/usr/local/cuda/include
 JAVA_FLAGS := -I$(JAVA_JDK)/include -I$(JAVA_JDK)include/linux
 
 
