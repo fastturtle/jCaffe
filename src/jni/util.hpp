@@ -7,7 +7,7 @@
 
 #define EPSILON 1e-30
 
-jfieldID getObjField(JNIEnv *env, jobject obj, const char *name, const char *sig) {
+inline jfieldID getObjField(JNIEnv *env, jobject obj, const char *name, const char *sig) {
     jclass c = env->GetObjectClass(obj);
     return env->GetFieldID(c, name, sig);
 }

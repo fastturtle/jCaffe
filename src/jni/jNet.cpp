@@ -2,8 +2,7 @@
 // #include <glog/logging.h>
 
 #include "util.hpp"
-#include "edu_h2r_JNet.h"
-#include "caffe/caffe.hpp"
+#include "edu_h2r_jNet.h"
 
 using std::string;
 using caffe::Net;
@@ -86,7 +85,7 @@ JNIEXPORT jfloatArray JNICALL Java_edu_h2r_JNet_forwardTo(JNIEnv *env, jobject o
     int to = -1;
     string s = string(c_to_layer_name);
     std::vector<string> layer_names = net->layer_names();
-    for (int i = 0; i < layer_names.size(); i++) {
+    for (unsigned int i = 0; i < layer_names.size(); i++) {
         if (s.compare(layer_names[i]) == 0) {
             to = i;
             break;
@@ -138,7 +137,7 @@ JNIEXPORT jobjectArray JNICALL Java_edu_h2r_JNet_getLayerNames(JNIEnv *env, jobj
     jobjectArray java_layer_names = env->NewObjectArray(layer_names.size(),
                                                         env->FindClass("java/lang/String"),
                                                         NULL);
-    for (int i = 0; i < layer_names.size(); i++)
+    for (unsigned int i = 0; i < layer_names.size(); i++)
         env->SetObjectArrayElement(java_layer_names, i,
                                     env->NewStringUTF(layer_names[i].c_str()));
 
@@ -164,7 +163,7 @@ JNIEXPORT jint JNICALL Java_edu_h2r_JNet_getBlobNumber(JNIEnv *env, jobject obj,
 
 
     vector<string> blob_names = net->layer_names();
-    for (int i = 0; i < blob_names.size(); i++) {
+    for (unsigned int i = 0; i < blob_names.size(); i++) {
         if (s.compare(blob_names[i]) == 0) {
             return i;
         }
