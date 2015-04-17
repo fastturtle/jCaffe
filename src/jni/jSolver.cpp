@@ -42,3 +42,9 @@ JNIEXPORT void JNICALL Java_edu_h2r_jSolver_train(JNIEnv *env, jobject obj) {
     solver->Solve();
 }
 
+JNIEXPORT void JNICALL Java_edu_h2r_jSolver__1dispose(JNIEnv *env, jobject obj) {
+    Solver<float> *solver = getInternalObject<Solver<float> >(env, obj);
+    setInternalPtr<Solver<float> >(env, obj, NULL);
+    delete solver;
+}
+
