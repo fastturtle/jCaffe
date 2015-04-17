@@ -140,7 +140,7 @@ public class JNet implements Disposable {
     public native void dispose();
 
     public native void train(String solverFile);
-    
+
     /**
      * A wrapper around the Caffe neural network's forwardTo method.
      * @param input the input data

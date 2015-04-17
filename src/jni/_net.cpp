@@ -1,5 +1,5 @@
 #include <string>
-// #include <cmath>
+// #include <glog/logging.h>
 
 #include "util.hpp"
 #include "edu_h2r_JNet.h"
@@ -11,6 +11,10 @@ using caffe::Blob;
 using std::vector;
 using std::cout;
 using boost::shared_ptr;
+
+DEFINE_string(solver, "",
+    "The solver definition protocol buffer text file.");
+
 
 JNIEXPORT jlong JNICALL Java_edu_h2r_JNet_createNet(JNIEnv *env, jobject obj, jstring param_file, jstring pretrained_param_file) {
     
@@ -34,6 +38,18 @@ JNIEXPORT void JNICALL Java_edu_h2r_JNet_dispose(JNIEnv *env, jobject obj) {
     Net<float> *net = getInternalObject<Net<float> >(env, obj);
     setInternalPtr<Net<float> >(env, obj, NULL);
     delete net;    
+}
+
+JNIEXPORT void JNICALL Java_edu_h2r_JNet_train(JNIEnv *env, jobject obj, jstring solverFile) {
+    const char* cSolverFile = env->GetStringUTFChars(solverFile, NULL);
+
+    caffe::SolverParameter solver_param;
+    caffe::ReadProtoFromTextFileOrDie(FLAGS_solver, &solver_param);
+
+    shared_ptr<caffe::Solver<float> > solver(caffe::GetSolver<float>(solver_param));
+    solver->Solve();
+
+    env->ReleaseStringUTFChars(solverFile, cSolverFile);
 }
 
 JNIEXPORT jfloatArray JNICALL Java_edu_h2r_JNet_forwardTo(JNIEnv *env, jobject obj,
