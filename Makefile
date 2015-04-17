@@ -19,6 +19,8 @@ $(JAVA$(PROJECT)_SO): $(JAVA$(PROJECT)_SRC)
 	$(CXX) -shared -o $@ $(JAVA$(PROJECT)_SRC) $(LINKFLAGS) $(JAVA_FLAGS) -L../build/lib -lcaffe
 	@ echo
 	javac -d . src/edu/h2r/JNet.java src/edu/h2r/Disposable.java
+	cp src/edu/h2r/JNet.java edu/h2r/
+	cp src/edu/h2r/Disposable.java edu/h2r/
 	jar cf $(JAVA$(PROJECT)_JAR) edu/*
 	rm -r edu
 
