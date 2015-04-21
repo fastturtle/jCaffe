@@ -70,8 +70,6 @@ public class jSolver {
         return net;
     }
 
-    public native void train();
-
     /**
      * Resets the underlying Caffe neural network.
      */
@@ -89,6 +87,8 @@ public class jSolver {
         net.dispose();
         _dispose();
     }
+
+    public native void train();
 
     private native void _dispose();
 
