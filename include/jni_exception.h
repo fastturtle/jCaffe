@@ -47,7 +47,7 @@ Param       :const char* pzFile,
              const char* pzMessage
 Return      :
 ******************************************************************************/
-void ThrowJNIException(const char* pzFile, int iLine,const char* pzMessage);
+void ThrowJNIException(const char* pzFile = 0, int iLine = 0, const char* pzMessage = 0);
 /******************************************************************************
 Restore the saved state.
 Param       :const char* pzFile,
