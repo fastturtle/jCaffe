@@ -37,7 +37,6 @@ JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_createSolver(JNIEnv *env,
     caffe::NetParameter net_param;
     caffe::ReadProtoFromTextFileOrDie(solver_param.net(), &net_param);
     const LayerParameter& layer_param = net_param.layer(0);
-    std::cout << "scale is: " << layer_param.transform_param().scale() << std::endl;
     env->SetFloatField(obj, getObjField(env, obj, "inputScale", "F"), layer_param.transform_param().scale());
 
     return reinterpret_cast<jlong>(solver);

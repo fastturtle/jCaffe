@@ -55,9 +55,14 @@ JNIEXPORT jfloatArray JNICALL Java_edu_h2r_jNet_forwardTo(JNIEnv *env, jobject o
 
     // We're doing some of the convenience that
     // Net<Dtype>::Forward does for us by hand
-    Blob<float> *net_input_blob = net->input_blobs()[0];
-    Blob<float> *data_input_blob = cloneWithNewData<float>(*net_input_blob, c_input);
-    net_input_blob->CopyFrom(*data_input_blob);
+    std::cout << "Type is " << net->layers()[0].get()->layer_param().type() << std::endl;
+    bool is_memory_data = (net->layers()[0].get()->layer_param().type() == "MemoryData");
+    Blob<float> *data_input_blob;
+    if(!is_memory_data){
+        Blob<float> *net_input_blob = net->input_blobs()[0];
+        data_input_blob = cloneWithNewData<float>(*net_input_blob, c_input);
+        net_input_blob->CopyFrom(*data_input_blob);
+    }
 
 
     int to = -1;
@@ -78,7 +83,9 @@ JNIEXPORT jfloatArray JNICALL Java_edu_h2r_jNet_forwardTo(JNIEnv *env, jobject o
     env->SetFloatArrayRegion(out, 0, results->count(), results->cpu_data());
 
     env->ReleaseStringUTFChars(to_layer_name, c_to_layer_name);
-    delete data_input_blob;
+    if(!is_memory_data){
+        delete data_input_blob;
+    }
     delete c_input;
 
     return out;
