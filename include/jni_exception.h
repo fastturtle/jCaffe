@@ -2,7 +2,7 @@
 #define JNI_EXCEPTION_CLASS_NAME "org/tutorial/jni/util/exception/JniException" //Java Exception class name
 #include <setjmp.h>
 
-jmp_buf g_sJmpbuf;                     //to save the program state
+jmp_buf jump_buffer;                     //to save the program state
 
 /***********************************************************************************
 Assert definition.
@@ -22,16 +22,16 @@ if (!(_EXPRESSION_)) \
 Restore the program state into the saved state (the program state is saved by setjmp)
 ***********************************************************************************/
 #define RESTORE_SAFE_STATE() \
-   longjmp(g_sJmpbuf,1);\
+   longjmp(jump_buffer,1);\
 
 /***********************************************************************************
 Save the program state. This saved state can be restored by longjmp
 ***********************************************************************************/
 #define SAVE_PGM_STATE()\
-    if (setjmp(g_sJmpbuf)!=0 )\
+    if (setjmp(jump_buffer)!=0 )\
     {\
       ThrowJNIException();\
-      return; \
+      return 0; \
     }\
 
 /***********************************************************************************
