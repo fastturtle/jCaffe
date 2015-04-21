@@ -14,53 +14,8 @@ public class jSolver {
 
     public jSolver(String solverFile) {
         this.solverFile = solverFile;
+        // Note: this function sets the field inputScale.
         internalPtr = createSolver(solverFile);
-        // Parse the network definition file name from the solver file
-        String basePath = solverFile.split("/(?=[^/]+$)")[0];
-        String networkFile = null;
-        inputScale = -1f;
-
-        // TODO: Find a better way to do this, it s messy and only works if both files are next to each other.
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(solverFile)));
-            String line;
-            while ((line = br.readLine()) != null)
-                if (line.trim().startsWith("net:")) {
-                    String tmp = line.trim().substring(line.trim().indexOf("net:") + 4).trim();
-                    String tmp2 = tmp.substring(1, tmp.length() - 1);
-                    networkFile = basePath + tmp2.substring(tmp2.lastIndexOf("/"), tmp2.length());
-                    break;
-                }
-            br.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Parse the input scale from the network definition file
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(networkFile)));
-            String line;
-            while ((line = br.readLine()) != null)
-                if (line.trim().startsWith("scale:")) {
-                    String tmp = line.trim().substring(line.trim().indexOf("scale:") + 6).trim();
-                    inputScale = Float.valueOf(tmp);
-                    break;
-                }
-            br.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (inputScale == -1){
-            System.out.println("Couldn't parse the 'scale' parameter from file " + networkFile +
-                    " (parsed from file " + solverFile + "). Using default value of scale=1");
-            this.inputScale =1;}
-
         net = new jNet(getNetPointer(), inputScale);
     }
 
@@ -88,7 +43,10 @@ public class jSolver {
         net.dispose();
         _dispose();
     }
-
+    
+    /**
+     * Trains the underlying Caffe neural network by doing a forward and backward pass on it.
+     */
     public native void train();
 
     private native void _dispose();

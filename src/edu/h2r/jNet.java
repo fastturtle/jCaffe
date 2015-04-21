@@ -8,14 +8,11 @@ import java.io.*;
  * TODO: 1) Add method to query number of nodes in layer
  * TODO: 2) Add c++ error handling
  * TODO: 3) Optimize image operations
- * TODO: 4) Have an internal thread create & destroy c++ stuff
  *
  */
 public class jNet implements Disposable {
-
     private float inputScale;
     private long internalPtr;
-    private String solverFile;
 
     /**
      * @param model_file the simplified model file (aka the deploy file)
@@ -29,54 +26,11 @@ public class jNet implements Disposable {
 
     /** Create and initialize a net from a solver file
      * @param solver_file the solver.prototxt file
+     * @param inputScale a float used to multiply inputs and scale them
      */
-    public jNet(String solver_file) {
+    public jNet(String solver_file, float inputScale) {
         this.internalPtr = createNet(solver_file);
-        this.solverFile = solver_file;
-        this.inputScale = -1;
-
-        // Parse the network definition file name from the solver file
-        String basePath = solver_file.split("/(?=[^/]+$)")[0];
-        String networkFile = null;
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(solver_file)));
-            String line;
-            while((line = br.readLine()) != null)
-                if(line.trim().startsWith("net:")){
-                    String tmp = line.trim().substring(line.trim().indexOf("net:") + 4).trim();
-                    networkFile = tmp.substring(1, tmp.length() - 1);
-                    if(!networkFile.startsWith("/"))
-                        networkFile = basePath + "/" + networkFile;
-                    break;
-                }
-            br.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Parse the input scale from the network definition file
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(networkFile)));
-            String line;
-            while((line = br.readLine()) != null)
-                if(line.trim().startsWith("scale:")){
-                    String tmp = line.trim().substring(line.trim().indexOf("scale:") + 6).trim();
-                    this.inputScale = Float.valueOf(tmp);
-                    break;
-                }
-            br.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (this.inputScale == -1)
-            throw new IllegalArgumentException("Couldn't parse the 'scale' parameter from file " + networkFile +
-                    " (parsed from file " + this.solverFile + ")");
+        this.inputScale = inputScale;
     }
 
     protected jNet(long internalPtr, float inputScale) {
