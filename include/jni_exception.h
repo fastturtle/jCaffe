@@ -3,8 +3,6 @@
 #define ERROR_MESSAGE_LENGTH 1024*5    //Error message length
 #define JNI_EXCEPTION_CLASS_NAME "edu/h2r/JniException" //Java Exception class name
 
-static jmp_buf g_sJmpbuf;                     //to save the program state
-
 /***********************************************************************************
 Assert definition.
 When the condition fails, call the function with the file,line,
@@ -18,20 +16,9 @@ if (!(_EXPRESSION_)) \
   {\
   ThrowJNIException(__FILE__,__LINE__, \
       _INFO_); \
-  return 0;
+  return 0;\
   }\
 
-
-#define JNI_ASSERT_DONT_USE(_EXPRESSION_ ,_INFO_) \
-if (!(_EXPRESSION_)) \
-  RestoreProgramState(__FILE__,__LINE__, \
-      _INFO_); \
-
-/***********************************************************************************
-Restore the program state into the saved state (the program state is saved by setjmp)
-***********************************************************************************/
-#define RESTORE_SAFE_STATE() \
-   longjmp(g_sJmpbuf,1);\
 
 /***********************************************************************************
 Save the program state. This saved state can be restored by longjmp

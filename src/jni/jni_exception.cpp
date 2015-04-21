@@ -24,25 +24,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     return JNI_VERSION_1_2;
 }
 /******************************************************************************
-Restore the saved state.
-Param       :const char* pzFile,
-             int iLine,
-             const char* pzMessage
-Return      :
-******************************************************************************/
-void RestoreProgramState(const char* pzFile, int iLine,const char* pzMessage) {
-   //Copy the error message to the global array.
-   sprintf(g_azErrorMessage,"JNIException ! \n \
-      File \t\t:  %s \n \
-      Line number \t\t: %d \n \
-      Reason for Exception\t: %s ",pzFile,iLine,pzMessage);
-   //Restore the saved/safe state.
-   // RESTORE_SAFE_STATE();
-   printf("%p\n", g_sJmpbuf);
-   longjmp(g_sJmpbuf, 1);
-   // ThrowJNIException(pzFile, iLine, pzMessage);
-}
-/******************************************************************************
 throws the exception to java
 Param       :const char* pzFile,
              int iLine,
