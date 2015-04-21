@@ -6,6 +6,8 @@
 using std::string;
 using caffe::Net;
 using caffe::Blob;
+using caffe::Layer;
+using caffe::MemoryDataLayer;
 using std::vector;
 using std::cout;
 using boost::shared_ptr;
@@ -103,6 +105,50 @@ JNIEXPORT jint JNICALL Java_edu_h2r_jNet_getNodeCount(JNIEnv *env, jobject obj,
     env->ReleaseStringUTFChars(blob_name, c_blob_name);
 
     return reinterpret_cast<jint>(blob->count());
+}
+
+JNIEXPORT void JNICALL Java_edu_h2r_jNet_setMemoryDataLayer(JNIEnv *env, jobject obj, jstring layer_name,
+                                                                    jfloatArray data, jfloatArray label){
+    Net<float>* net = getInternalObject<Net<float> >(env, obj);
+    const char* c_layer_name = env->GetStringUTFChars(layer_name, NULL);
+    float* c_data = env->GetFloatArrayElements(data, NULL);
+    float* c_label = env->GetFloatArrayElements(label, NULL);
+
+    // Check if the layer with the specified name exists
+    CHECK(net->has_layer(string(c_layer_name))) << "The layer with the specified name doesn't exist.";
+
+    // Normalize if necessary
+    float scale = env->GetFloatField(obj, getObjField(env, obj, "inputScale", "F"));
+
+    jsize len_data = env->GetArrayLength(data);
+    jsize len_label = env->GetArrayLength(label);
+    float* cpy_data = new float[len_data];
+    float* cpy_label = new float[len_label];
+
+    if (scale > EPSILON) {
+        for (int i = 0; i < len_data; i++) {
+            cpy_data[i] = c_data[i] * scale;
+        }
+        for (int i = 0; i < len_label; i++) {
+            cpy_label[i] = c_label[i] * scale;
+        }
+    } else {
+        for (int i = 0; i < len_data; i++) {
+            cpy_data[i] = c_data[i];
+        }
+        for (int i = 0; i < len_label; i++) {
+            cpy_label[i] = c_label[i];
+        }
+    }
+    delete c_data;
+    delete c_label;
+
+    Layer<float>* layer = net->layer_by_name(c_layer_name).get();
+    MemoryDataLayer<float>* memoryDataLayer = reinterpret_cast<MemoryDataLayer<float>* >(layer);
+
+    env->ReleaseStringUTFChars(layer_name, c_layer_name);
+
+    memoryDataLayer->Reset(cpy_data, cpy_label, 1);
 }
 
 JNIEXPORT jobjectArray JNICALL Java_edu_h2r_jNet_getLayerNames(JNIEnv *env, jobject obj) {

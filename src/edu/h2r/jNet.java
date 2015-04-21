@@ -214,6 +214,12 @@ public class jNet implements Disposable {
      */
     public native float[] forwardTo(float[] input, String toLayerName);
 
+    public native void setMemoryDataLayer(String layerName, float[] input, float[] label);
+
+    public void setMemoryDataLayer(String layerName, float[] input){
+        setMemoryDataLayer(layerName, input, new float[1]);
+    }
+
     /**
      * @return the names of all the layers in the neural network
      */
