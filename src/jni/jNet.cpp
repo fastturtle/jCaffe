@@ -76,7 +76,8 @@ JNIEXPORT jfloatArray JNICALL Java_edu_h2r_jNet_forwardTo(JNIEnv *env, jobject o
     net->ForwardFromTo(0, to);
 
     // Get results
-    shared_ptr<Blob<float> > results = net->blob_by_name(string(c_to_layer_name));
+    string blob_name = string(net->layer_by_name(c_to_layer_name).get()->layer_param().top().Get(0));
+    shared_ptr<Blob<float> > results = net->blob_by_name(blob_name);
 
     jfloatArray out = env->NewFloatArray(results->count());
     env->SetFloatArrayRegion(out, 0, results->count(), results->cpu_data());
