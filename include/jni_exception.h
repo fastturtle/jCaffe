@@ -1,8 +1,9 @@
-#define ERROR_MESSAGE_LENGTH 1024*5    //Error message length
-#define JNI_EXCEPTION_CLASS_NAME "org/tutorial/jni/util/exception/JniException" //Java Exception class name
 #include <setjmp.h>
 
-jmp_buf jump_buffer;                     //to save the program state
+#define ERROR_MESSAGE_LENGTH 1024*5    //Error message length
+#define JNI_EXCEPTION_CLASS_NAME "edu/h2r/JniException" //Java Exception class name
+
+static jmp_buf g_sJmpbuf;                     //to save the program state
 
 /***********************************************************************************
 Assert definition.
@@ -12,8 +13,16 @@ __FILE__' and '__LINE__' are predefined macros and part of the C/C++ standard.
 During preprocessing, they are replaced respectively by a constant string holding 
 the current file name and by a integer representing the current line number.
 ***********************************************************************************/
-
 #define JNI_ASSERT(_EXPRESSION_ ,_INFO_) \
+if (!(_EXPRESSION_)) \
+  {\
+  ThrowJNIException(__FILE__,__LINE__, \
+      _INFO_); \
+  return 0;
+  }\
+
+
+#define JNI_ASSERT_DONT_USE(_EXPRESSION_ ,_INFO_) \
 if (!(_EXPRESSION_)) \
   RestoreProgramState(__FILE__,__LINE__, \
       _INFO_); \
@@ -22,16 +31,16 @@ if (!(_EXPRESSION_)) \
 Restore the program state into the saved state (the program state is saved by setjmp)
 ***********************************************************************************/
 #define RESTORE_SAFE_STATE() \
-   longjmp(jump_buffer,1);\
+   longjmp(g_sJmpbuf,1);\
 
 /***********************************************************************************
 Save the program state. This saved state can be restored by longjmp
 ***********************************************************************************/
 #define SAVE_PGM_STATE()\
-    if (setjmp(jump_buffer)!=0 )\
+    if (setjmp(g_sJmpbuf)!=0 )\
     {\
       ThrowJNIException();\
-      return 0; \
+      return 0;\
     }\
 
 /***********************************************************************************

@@ -1,9 +1,11 @@
+#ifndef UTIL_H_
+#define UTIL_H_
+
 #include <jni.h>
 
 #include "caffe/caffe.hpp"
+#include "jni_exception.h"
 
-#ifndef _HANDLE_H_INCLUDED_
-#define _HANDLE_H_INCLUDED_
 
 #define EPSILON 1e-30
 
@@ -15,6 +17,7 @@ inline jfieldID getObjField(JNIEnv *env, jobject obj, const char *name, const ch
 template <typename T>
 T* getInternalObject(JNIEnv *env, jobject obj) {
     jlong ptr = env->GetLongField(obj, getObjField(env, obj, "internalPtr", "J"));
+    JNI_ASSERT(ptr != 0, "internalPtr was null");
     return reinterpret_cast<T *>(ptr);
 }
 

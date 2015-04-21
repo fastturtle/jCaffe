@@ -3,8 +3,9 @@ File : jni_exception.cpp
 Author:Jafar K (jafarmlp@googlemail.com)
 Date/version : 02/02/07
 ********************************************************************************/
-#include <jni_exception.h>
 #include <jni.h>
+
+#include "jni_exception.h"
 
 JavaVM *cached_jvm;                                   // A pointer to the VM from which
                                                       //we can get the JNIEnv for doing callbacks:
@@ -36,7 +37,10 @@ void RestoreProgramState(const char* pzFile, int iLine,const char* pzMessage) {
       Line number \t\t: %d \n \
       Reason for Exception\t: %s ",pzFile,iLine,pzMessage);
    //Restore the saved/safe state.
-   RESTORE_SAFE_STATE();
+   // RESTORE_SAFE_STATE();
+   printf("%p\n", g_sJmpbuf);
+   longjmp(g_sJmpbuf, 1);
+   // ThrowJNIException(pzFile, iLine, pzMessage);
 }
 /******************************************************************************
 throws the exception to java
@@ -62,13 +66,13 @@ void ThrowJNIException(const char* pzFile, int iLine,const char* pzMessage)
       printf("Invalid null pointer in ThrowJNIException " );
       return;
    }
+
    tClass = env->FindClass(JNI_EXCEPTION_CLASS_NAME);
    if (tClass == NULL) {
      printf("Not found %s",JNI_EXCEPTION_CLASS_NAME);
      return;
    }
    //Throw the excption with error info
-   env->ThrowNew(tClass,g_azErrorMessage );
+   env->ThrowNew(tClass,g_azErrorMessage);
    env->DeleteLocalRef(tClass);
- 
 }

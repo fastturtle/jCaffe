@@ -1,4 +1,5 @@
 #include <string>
+// #include <setjmp.h>
 
 #include "util.hpp"
 #include "edu_h2r_jSolver.h"
@@ -8,6 +9,7 @@ using caffe::Solver;
 
 JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_createSolver(JNIEnv *env,
                                             jobject obj, jstring solverFile) {
+
     const char* cSolverFile = env->GetStringUTFChars(solverFile, NULL);
 
     caffe::SolverParameter solver_param;
@@ -25,6 +27,8 @@ JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_createSolver(JNIEnv *env,
     }
 
     Solver<float> *solver = caffe::GetSolver<float>(solver_param);
+    JNI_ASSERT(solver != NULL, "caffe::GetSolver returned a null pointer");
+
     setInternalPtr<Solver<float> >(env, obj, solver);
 
     env->ReleaseStringUTFChars(solverFile, cSolverFile);
