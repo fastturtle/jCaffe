@@ -20,15 +20,15 @@ public class jSolver {
         String networkFile = null;
         inputScale = -1f;
 
+        // TODO: Find a better way to do this, it s messy and only works if both files are next to each other.
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(solverFile)));
             String line;
             while ((line = br.readLine()) != null)
                 if (line.trim().startsWith("net:")) {
                     String tmp = line.trim().substring(line.trim().indexOf("net:") + 4).trim();
-                    networkFile = tmp.substring(1, tmp.length() - 1);
-                    if (!networkFile.startsWith("/"))
-                        networkFile = basePath + "/" + networkFile;
+                    String tmp2 = tmp.substring(1, tmp.length() - 1);
+                    networkFile = basePath + tmp2.substring(tmp2.lastIndexOf("/"), tmp2.length());
                     break;
                 }
             br.close();
@@ -56,9 +56,10 @@ public class jSolver {
             e.printStackTrace();
         }
 
-        if (inputScale == -1)
-            throw new IllegalArgumentException("Couldn't parse the 'scale' parameter from file " + networkFile +
-                    " (parsed from file " + solverFile + ")");
+        if (inputScale == -1){
+            System.out.println("Couldn't parse the 'scale' parameter from file " + networkFile +
+                    " (parsed from file " + solverFile + "). Using default value of scale=1");
+            this.inputScale =1;}
 
         net = new jNet(getNetPointer(), inputScale);
     }
@@ -69,8 +70,6 @@ public class jSolver {
     public jNet getNet() {
         return net;
     }
-
-    public native void train();
 
     /**
      * Resets the underlying Caffe neural network.
@@ -89,6 +88,8 @@ public class jSolver {
         net.dispose();
         _dispose();
     }
+
+    public native void train();
 
     private native void _dispose();
 
