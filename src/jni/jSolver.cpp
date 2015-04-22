@@ -6,6 +6,7 @@
 #include "edu_h2r_jSolver.h"
 
 using caffe::Solver;
+using caffe::Net;
 using caffe::LayerParameter;
 
 
@@ -51,6 +52,21 @@ JNIEXPORT jlong JNICALL Java_edu_h2r_jSolver_getNetPointer(JNIEnv *env, jobject 
 JNIEXPORT void JNICALL Java_edu_h2r_jSolver_train(JNIEnv *env, jobject obj) {
     Solver<float> *solver = getInternalObject<Solver<float> >(env, obj);
     solver->Solve();
+}
+
+JNIEXPORT void JNICALL Java_edu_h2r_jSolver_trainOneStep(JNIEnv *env, jobject obj){
+    Solver<float> *solver = getInternalObject<Solver<float> >(env, obj);
+    Net<float> *net_ = solver->net().get();
+
+    LOG(INFO) << "Solving " << net_->name();
+
+    solver->Step(1);
+
+    float loss;
+    int iter_ = solver->iter();
+    net_->ForwardPrefilled(&loss);
+
+    LOG(INFO) << "Optimization Done.";
 }
 
 JNIEXPORT void JNICALL Java_edu_h2r_jSolver__1dispose(JNIEnv *env, jobject obj) {
