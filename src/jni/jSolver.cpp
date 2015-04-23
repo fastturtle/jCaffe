@@ -63,10 +63,14 @@ JNIEXPORT void JNICALL Java_edu_h2r_jSolver_trainOneStep(JNIEnv *env, jobject ob
     solver->Step(1);
 
     float loss;
-    int iter_ = solver->iter();
+    solver->iter();
     net_->ForwardPrefilled(&loss);
 
     LOG(INFO) << "Optimization Done.";
+}
+JNIEXPORT void JNICALL Java_edu_h2r_jSolver_setLogLevel(JNIEnv *env, jobject obj, jint log_level){
+    const int c_log_level = reinterpret_cast<int>(log_level);
+    FLAGS_minloglevel = c_log_level;
 }
 
 JNIEXPORT void JNICALL Java_edu_h2r_jSolver__1dispose(JNIEnv *env, jobject obj) {
