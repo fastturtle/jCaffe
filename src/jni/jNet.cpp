@@ -13,7 +13,7 @@ using std::cout;
 using boost::shared_ptr;
 
 JNIEXPORT jlong JNICALL Java_edu_h2r_jNet_createNet__Ljava_lang_String_2Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring param_file, jstring pretrained_param_file) {
-    
+
     FLAGS_minloglevel = 2;
     const char* c_param_file = env->GetStringUTFChars(param_file, NULL);
     const char* c_pretrained_param_file = env->GetStringUTFChars(pretrained_param_file, NULL);
@@ -33,7 +33,7 @@ JNIEXPORT void JNICALL Java_edu_h2r_jNet_dispose(JNIEnv *env, jobject obj) {
 
     Net<float> *net = getInternalObject<Net<float> >(env, obj);
     setInternalPtr<Net<float> >(env, obj, NULL);
-    delete net;    
+    delete net;
 }
 
 JNIEXPORT jfloatArray JNICALL Java_edu_h2r_jNet_forwardTo(JNIEnv *env, jobject obj,
@@ -47,7 +47,7 @@ JNIEXPORT jfloatArray JNICALL Java_edu_h2r_jNet_forwardTo(JNIEnv *env, jobject o
     if (scale > EPSILON) {
         jsize len = env->GetArrayLength(input);
         for (int i = 0; i < len; i++) {
-            c_input[i] *= scale;       
+            c_input[i] *= scale;
         }
     }
 

@@ -58,4 +58,3 @@ JNIEXPORT void JNICALL Java_edu_h2r_jSolver__1dispose(JNIEnv *env, jobject obj) 
     setInternalPtr<Solver<float> >(env, obj, NULL);
     delete solver;
 }
-
