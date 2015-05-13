@@ -17,6 +17,22 @@ JNIEXPORT void JNICALL Java_edu_h2r_jSolver_train
 
 /*
  * Class:     edu_h2r_jSolver
+ * Method:    trainOneStep
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_edu_h2r_jSolver_trainOneStep
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     edu_h2r_jSolver
+ * Method:    setLogLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_edu_h2r_jSolver_setLogLevel
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     edu_h2r_jSolver
  * Method:    _dispose
  * Signature: ()V
  */

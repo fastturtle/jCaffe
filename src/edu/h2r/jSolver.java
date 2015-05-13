@@ -49,6 +49,17 @@ public class jSolver {
      */
     public native void train();
 
+    /**
+     * Trains the underlying Caffe neural network for one step only, by doing a forward and backward pass on it.
+     */
+    public native void trainOneStep();
+
+    /**
+     * Sets Caffe log level.
+     * @param log_level log level (levels INFO, WARNING, ERROR, and FATAL are 0, 1, 2, and 3, respectively)
+     */
+    public native void setLogLevel(int log_level);
+
     private native void _dispose();
 
     private native long getNetPointer();
