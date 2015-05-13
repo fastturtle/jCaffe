@@ -3,3 +3,5 @@ caffe.iml
 
 lib/*
 out/*
+
+*.swp
